@@ -144,9 +144,9 @@ fn check_function_interface(ast: &mut ItemFn) -> AnyResult<()> {
     if interface_signature == func_signature {
         Ok(())
     } else {
-        Err(InvalidInterfaceError::new(
-            "interface signature unconsistent.",
-        ))
+        Err(InvalidInterfaceError::new(&format!(
+            "inconsistent interface signature. expect `{interface_signature}`, found `{func_signature}`."
+        )))
     }?;
     Ok(())
 }
