@@ -86,7 +86,7 @@ impl Parse for MetaCollectArgs {
 
 pub fn wgse_command_impl(args: MetaCollectArgs, ast: &mut ItemFn) -> AnyResult<()> {
     let file_name = format!(
-        "src/.autogen/wgse_command/{}.json",
+        "src/.autogen/wgse_commands/{}.json",
         args.name.to_case(Case::Snake)
     );
     let project_dir = env::current_dir()?;
@@ -139,7 +139,8 @@ fn check_function_interface(ast: &mut ItemFn) -> AnyResult<()> {
             .ok_or(InvalidInterfaceError::new(
                 "no interface signature found. run `cargo build --features meta_init` once before run `cargo build --features meta_collect`.",
             ))?;
-    let func_signature = quote! { #(func.sig.clone()) }.to_string();
+    let func_signature = ast.sig.clone();
+    let func_signature = quote! { #func_signature; }.to_string();
 
     if interface_signature == func_signature {
         Ok(())

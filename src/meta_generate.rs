@@ -40,7 +40,7 @@ pub fn wgse_command_trait_impl(arg: TokenStream, input: TokenStream) -> AnyResul
     let dest_dir = Path::new(&project_dir).join("src/.autogen/wgse_commands");
 
     let trait_name = parse::<Ident>(arg)?;
-    let target_enum = parse::<ItemEnum>(input)?;
+    let target_enum = parse::<ItemEnum>(input)?.ident;
 
     let (mut commands_ast, tag_list) = parse_command_files(&dest_dir, &trait_name)?;
 
@@ -85,7 +85,7 @@ fn parse_command_files(
             .as_str()
             .unwrap()
             .to_case(Case::UpperCamel);
-        let code = json_value["code"].as_u64().unwrap();
+        let code = json_value["code"].as_u64().unwrap() as u8;
         let mut func = parse_str::<ItemFn>(json_value["raw"].as_str().unwrap())?;
 
         func.sig.ident = Ident::new("execute", Span::call_site().into());
